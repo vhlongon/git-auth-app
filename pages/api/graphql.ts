@@ -1,16 +1,7 @@
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
 import { ApolloServer, gql } from 'apollo-server-micro';
-
-const typeDefs = gql`
-  type Query {
-    users: [User!]!
-  }
-  type User {
-    name: String
-  }
-`;
+import typeDefs from '../../graphql/schema.graphql';
 
 const resolvers = {
   Query: {
