@@ -1,0 +1,17 @@
+overwrite: true
+schema: 'graphql/schema.graphql'
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  graphql/generated/graphql-types.ts:
+    documents: 'graphql/*.graphql'
+    plugins:
+      - typescript
+      - typescript-resolvers
+      - typescript-operations
+    config:
+      skipTypeNameForRoot: true
+      skipTypename: true
+      namingConvention:
+        enumValues: keep

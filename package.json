@@ -5,7 +5,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-graphql-schema": "graphql-codegen --config codegen.schema.yml",
+    "generate-graphql-types": "graphql-codegen --config codegen.types.yml && eslint ./graphql/generated --fix",
+    "postinstall": "yarn generate-graphql-types"
   },
   "dependencies": {
     "apollo-server-micro": "^3.6.1",
@@ -16,10 +19,16 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.3.1",
+    "@graphql-codegen/introspection": "^2.1.1",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-operations": "^2.2.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
     "eslint": "8.6.0",
     "eslint-config-next": "12.0.8",
+    "prettier": "^2.5.1",
     "typescript": "4.5.4"
   }
 }
