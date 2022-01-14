@@ -3,6 +3,8 @@ mutation AuthorizeWithGitHub($code: String!) {
     user {
       name
       login
+      id
+      avatarUrl
     }
     accessToken
   }

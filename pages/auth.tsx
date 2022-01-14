@@ -4,23 +4,29 @@ import { client } from '../apollo/client';
 import {
   AuthorizeWithGitHubMutation,
   AuthorizeWithGitHubMutationVariables,
-  GetGithubAccessTokenMutation,
-  GetGithubAccessTokenMutationVariables,
-  GetMeQueryHookResult,
   User,
 } from '../graphql/generated/graphql-types';
 import authorizeWithGithub from '../graphql/mutations/authorizeWithGithub.graphql';
+import { setServerCookie } from '../utils/cookies';
+import { decodeJWT, encodeJWT, isValidJWT } from '../utils/jwtUtils';
+import getCookie from 'react-use-cookie';
 
 interface Props {
-  accessToken?: string;
   user?: User;
+  jwtToken?: string;
+  error?: string;
 }
-const Auth = ({ user, accessToken }: Props) => {
+
+const Auth = ({ user, jwtToken, error }: Props) => {
+  if (error) {
+    return <div>something went wrong: {error}</div>;
+  }
   return (
     <div>
-      <h1>Auth redirect page - no code provided</h1>
-      {accessToken && <p>accessToken: {accessToken}</p>}
-      {user && <p>user: {user.name}</p>}
+      <h1>Auth page</h1>
+      {user?.accessToken && <p>accessToken: {user.accessToken}</p>}
+      {user?.name && <p>user: {user.name}</p>}
+      {jwtToken && <p>jwtToken: {jwtToken}</p>}
     </div>
   );
 };
@@ -31,32 +37,63 @@ interface Params {
   code?: string;
 }
 
-export const getServerSideProps: GetServerSideProps<Params> = async context => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const { code } = context.query;
 
   if (typeof code === 'string') {
-    const { data } = await client.mutate<
-      AuthorizeWithGitHubMutation,
-      AuthorizeWithGitHubMutationVariables
-    >({
-      mutation: authorizeWithGithub,
-      variables: {
-        code,
-      },
-    });
+    const { jwt } = context.req.cookies;
+    const { jwtToken, accessToken } = JSON.parse(jwt || '{}');
 
-    return {
-      props: {
-        accessToken: data?.authorizeWithGithub.accessToken ?? '',
-        user: data?.authorizeWithGithub.user ?? '',
-      },
-    };
+    if (isValidJWT(jwtToken, accessToken)) {
+      const user = decodeJWT(jwtToken);
+
+      return {
+        props: {
+          jwtToken,
+          user,
+        },
+      };
+    }
+
+    try {
+      const { data } = await client.mutate<
+        AuthorizeWithGitHubMutation,
+        AuthorizeWithGitHubMutationVariables
+      >({
+        mutation: authorizeWithGithub,
+        variables: {
+          code,
+        },
+      });
+
+      if (data) {
+        const { user, accessToken } = data.authorizeWithGithub;
+        const userWithAccessToken = { ...user, accessToken };
+
+        const jwtToken = encodeJWT(userWithAccessToken, accessToken);
+        setServerCookie(
+          context.res,
+          'jwt',
+          JSON.stringify({ jwtToken, accessToken }),
+        );
+
+        return {
+          props: {
+            user: userWithAccessToken,
+            jwtToken,
+          },
+        };
+      }
+    } catch (error) {
+      return {
+        props: {
+          error: (error as string)?.toString() ?? 'an error occurred',
+        },
+      };
+    }
   }
 
   return {
-    props: {
-      accessToken: '',
-      user: '',
-    },
+    props: {},
   };
 };
