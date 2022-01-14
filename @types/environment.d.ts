@@ -7,6 +7,7 @@ declare global {
       TOKEN_ENDPOINT: string;
       AUTHORIZATION_ENDPOINT: string;
       RESOURCE_ENDPOINT: string;
+      BASE_URL: string;
     }
   }
 }
