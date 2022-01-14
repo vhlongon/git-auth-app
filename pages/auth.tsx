@@ -45,12 +45,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
     const { jwtToken, accessToken } = JSON.parse(jwt || '{}');
 
     if (isValidJWT(jwtToken, accessToken)) {
-      const user = decodeJWT(jwtToken);
-
       return {
-        props: {
-          jwtToken,
-          user,
+        redirect: {
+          destination: '/',
+          permanent: false,
         },
       };
     }
@@ -78,9 +76,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
         );
 
         return {
-          props: {
-            user: userWithAccessToken,
-            jwtToken,
+          redirect: {
+            destination: '/',
+            permanent: false,
           },
         };
       }
