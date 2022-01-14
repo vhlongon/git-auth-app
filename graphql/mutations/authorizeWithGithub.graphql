@@ -1,0 +1,9 @@
+mutation AuthorizeWithGitHub($code: String!) {
+  authorizeWithGithub(code: $code) {
+    user {
+      name
+      login
+    }
+    accessToken
+  }
+}

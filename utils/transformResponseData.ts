@@ -1,5 +1,5 @@
 import { Repo, User } from '../graphql/generated/graphql-types';
-import { RepoPayload } from '../graphql/resolvers/reposResolver';
+import { RepoPayload } from '../apollo/resolvers/reposResolver';
 import { AuthPayloadUser } from '../types';
 
 export const transforUserResponse = (user: AuthPayloadUser): User => ({

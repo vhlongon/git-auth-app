@@ -1,7 +1,7 @@
 import { NextApiRequest } from 'next';
-import { transforUserResponse } from '../../utils/transformResponseData';
-import { User } from '../generated/graphql-types';
-import { requestGithubUserAccount } from '../resolvers/authorizeWithGithubResolver';
+import { transforUserResponse } from '../utils/transformResponseData';
+import { User } from '../graphql/generated/graphql-types';
+import { requestGithubUserAccount } from './resolvers/authorizeWithGithubResolver';
 
 export type Context = {
   user: User | null;
@@ -24,7 +24,6 @@ export const ApolloServerContext = async ({ req }: { req: NextApiRequest }) => {
 
   try {
     const user = await requestGithubUserAccount(accessToken);
-    console.log(user)
 
     return { isLoggedIn: true, user: transforUserResponse(user), accessToken };
   } catch (error) {

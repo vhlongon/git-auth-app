@@ -1,6 +1,6 @@
 import { AuthPayloadUser, Credentials } from '../../types';
 import { transforUserResponse } from '../../utils/transformResponseData';
-import { MutationResolvers } from '../generated/graphql-types';
+import { MutationResolvers } from '../../graphql/generated/graphql-types';
 import { requestGithubToken } from './getGithubAccessTokenResolver';
 
 export const requestGithubUserAccount = async (
@@ -22,6 +22,7 @@ export const requestGithubUserAccount = async (
 
 const requestGithubUser = async (credentials: Credentials) => {
   const { access_token } = await requestGithubToken(credentials);
+  console.log({ access_token });
   const githubUser = await requestGithubUserAccount(access_token);
 
   return { user: githubUser, accessToken: access_token };
@@ -29,12 +30,13 @@ const requestGithubUser = async (credentials: Credentials) => {
 
 export const authorizeWithGithubResolver: MutationResolvers['authorizeWithGithub'] =
   async (parent, { code }) => {
-    const { user, accessToken } = await requestGithubUser({
+    const credentials = {
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
       code,
       redirect_uri: process.env.REDIRECT_URI,
-    });
+    };
+    const { user, accessToken } = await requestGithubUser(credentials);
 
     return { user: transforUserResponse(user), accessToken };
   };

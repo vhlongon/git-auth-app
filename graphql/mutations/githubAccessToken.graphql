@@ -1,0 +1,5 @@
+mutation getGithubAccessToken($code: String!) {
+  getGithubAccessToken(code: $code) {
+    accessToken
+  }
+}

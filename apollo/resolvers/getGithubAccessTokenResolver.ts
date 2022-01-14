@@ -1,12 +1,11 @@
 import { Credentials } from '../../types';
-import { MutationResolvers } from '../generated/graphql-types';
+import { MutationResolvers } from '../../graphql/generated/graphql-types';
 
 export const requestGithubToken = async (
   credentials: Credentials,
 ): Promise<{
   access_token: string;
 }> => {
-  console.log({ credentials });
   const res = await fetch(process.env.TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {

@@ -1,0 +1,5 @@
+query getGithubLogin($scope: [Scope!]) {
+  githubLoginUrl(scope: $scope) {
+    url
+  }
+}

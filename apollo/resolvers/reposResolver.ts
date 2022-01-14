@@ -1,6 +1,6 @@
-import { Context } from './../context/apolloServerContext';
+import { Context } from '../apolloServerContext';
 import { transformRepoResponse } from '../../utils/transformResponseData';
-import { QueryResolvers } from '../generated/graphql-types';
+import { QueryResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser } from '../../types';
 
 export type Permissions = {
@@ -103,7 +103,7 @@ export const getGithubUserRepos = async (
 
   if (!res.ok) {
     console.error('error requestGithubUserAccount', res);
-    throw new Error(`Failed to fetch github user account: ${res.statusText}`);
+    throw new Error(`Failed to fetch github user repos: ${res.statusText}`);
   }
 
   return res.json();

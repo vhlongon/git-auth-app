@@ -1,5 +1,5 @@
-import { Context } from '../context/apolloServerContext';
-import { QueryResolvers } from '../generated/graphql-types';
+import { Context } from '../apolloServerContext';
+import { QueryResolvers } from '../../graphql/generated/graphql-types';
 
 export const meResolver: QueryResolvers<Context>['me'] = (
   parent,

@@ -1,5 +1,5 @@
-import { Context } from '../context/apolloServerContext';
-import { QueryResolvers, Scope } from '../generated/graphql-types';
+import { Context } from '../apolloServerContext';
+import { QueryResolvers, Scope } from '../../graphql/generated/graphql-types';
 
 export const githubLoginUrl: QueryResolvers<Context>['githubLoginUrl'] = (
   parent,
