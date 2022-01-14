@@ -1,7 +1,10 @@
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-micro';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ApolloServerContext, Context } from '../../graphql/context/apolloServerContext';
+import {
+  ApolloServerContext,
+  Context,
+} from '../../graphql/context/apolloServerContext';
 import { Resolvers, User } from '../../graphql/generated/graphql-types';
 import { authorizeWithGithubResolver } from '../../graphql/resolvers/authorizeWithGithubResolver';
 import { getGithubAccessTokenResolver } from '../../graphql/resolvers/getGithubAccessTokenResolver';
@@ -9,8 +12,6 @@ import { githubLoginUrl } from '../../graphql/resolvers/githubLoginUrlResolver';
 import { meResolver } from '../../graphql/resolvers/meResolver';
 import { reposResolver } from '../../graphql/resolvers/reposResolver';
 import typeDefs from '../../graphql/schema.graphql';
-
-
 
 const resolvers: Resolvers<Context> = {
   Query: {
@@ -27,6 +28,7 @@ const resolvers: Resolvers<Context> = {
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   context: ApolloServerContext,
 });
