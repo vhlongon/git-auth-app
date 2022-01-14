@@ -1,7 +1,62 @@
 type User {
-  name: String
+  login: String
+  name: String!
+  id: Int!
+  avatarUrl: String
+  url: String!
+  location: String
+  email: String
+  publicRepos: Int
+  publicGists: Int
+  followers: Int
+  following: Int
+  accessToken: String
+}
+
+enum Scope {
+  user
+  public_repo
+}
+
+type AuthPayloadWithUser {
+  accessToken: String!
+  user: User!
+}
+
+type AuthPayload {
+  accessToken: String!
+}
+
+type LoginUrlPayload {
+  url: String!
+}
+
+type Repo {
+  createdAt: String!
+  description: String
+  forksCount: Int
+  fullName: String!
+  homepage: String
+  id: Int!
+  language: String
+  name: String!
+  openIssuesCount: Int
+  owner: User!
+  pushedAt: String!
+  size: Int
+  stargazersCount: Int
+  updatedAt: String!
+  url: String!
+  watchersCount: Int
 }
 
 type Query {
-  users: [User!]!
+  githubLoginUrl(scope: [Scope!]): LoginUrlPayload!
+  me: User
+  repos: [Repo!]
+}
+
+type Mutation {
+  authorizeWithGithub(code: String!): AuthPayloadWithUser!
+  getGithubAccessToken(code: String!): AuthPayload!
 }

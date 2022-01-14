@@ -1,0 +1,14 @@
+query getMe {
+  me {
+    name
+    login
+    id
+    avatarUrl
+    url
+    location
+    email
+    publicRepos
+    publicGists
+    followers
+  }
+}
