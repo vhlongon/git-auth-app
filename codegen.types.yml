@@ -5,11 +5,12 @@ hooks:
     - prettier --write
 generates:
   graphql/generated/graphql-types.ts:
-    documents: 'graphql/*.graphql'
+    documents: 'graphql/**/*.graphql'
     plugins:
       - typescript
       - typescript-resolvers
       - typescript-operations
+      - typescript-react-apollo
     config:
       skipTypeNameForRoot: true
       skipTypename: true

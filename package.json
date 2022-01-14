@@ -11,6 +11,7 @@
     "postinstall": "yarn generate-graphql-types"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.7",
     "apollo-server-micro": "^3.6.1",
     "graphql": "^16.2.0",
     "micro": "^9.3.4",
@@ -23,6 +24,7 @@
     "@graphql-codegen/introspection": "^2.1.1",
     "@graphql-codegen/typescript": "^2.4.2",
     "@graphql-codegen/typescript-operations": "^2.2.2",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.4",
     "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
