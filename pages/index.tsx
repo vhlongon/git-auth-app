@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { client } from '../apollo/client';
+import Button from '../components/Button';
 import { AuthProvider, useAuth } from '../providers/AuthProvider';
 
 const Home: NextPage = () => {
@@ -20,10 +21,14 @@ const Home: NextPage = () => {
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <h2>Home page</h2>
-        {isLoggedIn && (
-          <button onClick={() => router.push('/profile')}>Go to profile</button>
-        )}
+        <div className="flex flex-col flex-1 items-center justify-center">
+          <h2 className="text-2xl mb-6">Home page</h2>
+          {isLoggedIn && (
+            <Button onClick={() => router.push('/profile')}>
+              Go to profile
+            </Button>
+          )}
+        </div>
       </AuthProvider>
     </ApolloProvider>
   );

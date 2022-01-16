@@ -6,7 +6,7 @@ import { isValidJWT } from '../utils/jwtUtils';
 
 const Profile = () => {
   return (
-    <div>
+    <div className="flex flex-1 flex-col justify-center items-center">
       <h2>Profile page</h2>
     </div>
   );

@@ -4,6 +4,7 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { getCookie, setCookie } from 'react-use-cookie';
@@ -32,9 +33,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const validJWT = isValidJWT(jwtToken, accessToken);
   const [isLoggedIn, setIsLoggedIn] = useState(validJWT);
   const user = isLoggedIn ? decodeJWT(jwtToken) : undefined;
+
+  useEffect(() => {
+    if (window === undefined) {
+      return;
+    }
+
+    window.localStorage.setItem('accessToken', accessToken);
+    window.localStorage.setItem('user', JSON.stringify(user));
+  }, [accessToken, user]);
+
   const logOut = useCallback(() => {
     setIsLoggedIn(false);
     setCookie('jwt', '');
+    window.localStorage.setItem('accessToken', '');
+    window.localStorage.setItem('user', '');
     router.push('/');
   }, [router]);
 
