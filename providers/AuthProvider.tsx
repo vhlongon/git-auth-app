@@ -39,15 +39,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    window.localStorage.setItem('accessToken', accessToken);
-    window.localStorage.setItem('user', JSON.stringify(user));
-  }, [accessToken, user]);
+    window.localStorage.setItem('jwtCookie', jwtCookie);
+  }, [jwtCookie]);
 
   const logOut = useCallback(() => {
     setIsLoggedIn(false);
     setCookie('jwt', '');
-    window.localStorage.setItem('accessToken', '');
-    window.localStorage.setItem('user', '');
+    window.localStorage.setItem('jwtCookie', '');
     router.push('/');
   }, [router]);
 
