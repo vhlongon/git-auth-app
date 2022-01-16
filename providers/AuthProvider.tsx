@@ -34,18 +34,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(validJWT);
   const user = isLoggedIn ? decodeJWT(jwtToken) : undefined;
 
-  useEffect(() => {
-    if (window === undefined) {
-      return;
-    }
-
-    window.localStorage.setItem('jwtCookie', jwtCookie);
-  }, [jwtCookie]);
-
   const logOut = useCallback(() => {
     setIsLoggedIn(false);
     setCookie('jwt', '');
-    window.localStorage.setItem('jwtCookie', '');
     router.push('/');
   }, [router]);
 
