@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { getCookie, setCookie } from 'react-use-cookie';
 import { User } from '../graphql/generated/graphql-types';
+import { parseCookie } from '../utils/cookies';
 import { decodeJWT, isValidJWT } from '../utils/jwtUtils';
 
 interface AuthContextProps {
@@ -24,12 +25,13 @@ export const AuthContext = createContext<AuthContextProps>({
 
 interface AuthProviderProps {
   children: ReactNode;
+  cookie: string;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children, cookie }: AuthProviderProps) => {
   const router = useRouter();
-  const jwtCookie = getCookie('jwt');
-  const { jwtToken, accessToken } = JSON.parse(jwtCookie || '{}');
+  const { jwt } = parseCookie(cookie) ?? {};
+  const { jwtToken, accessToken } = JSON.parse((jwt as string) || '{}');
   const validJWT = isValidJWT(jwtToken, accessToken);
   const [isLoggedIn, setIsLoggedIn] = useState(validJWT);
   const user = isLoggedIn ? decodeJWT(jwtToken) : undefined;

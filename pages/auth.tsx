@@ -21,6 +21,7 @@ const Auth = ({ user, jwtToken, error }: Props) => {
   if (error) {
     return <div>something went wrong: {error}</div>;
   }
+
   return (
     <div>
       <h1>Auth page</h1>
