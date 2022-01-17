@@ -24,13 +24,20 @@ export const AuthContext = createContext<AuthContextProps>({
 
 interface AuthProviderProps {
   children: ReactNode;
-  cookie: string;
+  initialCookie: string;
 }
 
-export const AuthProvider = ({ children, cookie }: AuthProviderProps) => {
+export const AuthProvider = ({
+  children,
+  initialCookie,
+}: AuthProviderProps) => {
+  const { jwt } = parseCookie(initialCookie) ?? {};
+  const clientCookie = getCookie('jwt');
+  const { jwtToken, accessToken } = JSON.parse(
+    (jwt as string) || clientCookie || '{}',
+  );
+
   const router = useRouter();
-  const { jwt } = parseCookie(cookie) ?? {};
-  const { jwtToken, accessToken } = JSON.parse((jwt as string) || '{}');
   const validJWT = isValidJWT(jwtToken, accessToken);
   const [isLoggedIn, setIsLoggedIn] = useState(validJWT);
   const user = isLoggedIn ? decodeJWT(jwtToken) : undefined;

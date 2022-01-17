@@ -9,7 +9,7 @@ import { NextPageContext } from 'next';
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ApolloProvider client={client}>
-      <AuthProvider cookie={pageProps.cookie}>
+      <AuthProvider initialCookie={pageProps.cookie}>
         <div className="bg-amber-50 flex flex-1  flex-col h-screen text-gray-500">
           <Header />
           <Component {...pageProps} />
