@@ -6,7 +6,6 @@ import {
   GetGithubLoginQuery,
   GetGithubLoginQueryVariables,
   Scope,
-  useGetGithubLoginQuery,
 } from '../graphql/generated/graphql-types';
 import getGithubLoginUrl from '../graphql/queries/githubLoginUrl.graphql';
 

@@ -1,7 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import { useAuth } from '../providers/AuthProvider';
+import React from 'react';
 import { isValidJWT } from '../utils/jwtUtils';
 import meQuery from '../graphql/queries/me.graphql';
 import { client } from '../apollo/client';

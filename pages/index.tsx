@@ -1,10 +1,8 @@
-import { ApolloProvider } from '@apollo/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { client } from '../apollo/client';
 import Button from '../components/Button';
-import { AuthProvider, useAuth } from '../providers/AuthProvider';
+import { useAuth } from '../providers/AuthProvider';
 
 const Home: NextPage = () => {
   const { isLoggedIn } = useAuth();

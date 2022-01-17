@@ -4,8 +4,7 @@ import { ApolloProvider } from '@apollo/client';
 import { client } from '../apollo/client';
 import { AuthProvider } from '../providers/AuthProvider';
 import Header from '../components/Header';
-import { isValidJWT } from '../utils/jwtUtils';
-import { GetServerSideProps, NextPageContext } from 'next';
+import { NextPageContext } from 'next';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (

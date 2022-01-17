@@ -8,8 +8,7 @@ import {
 } from '../graphql/generated/graphql-types';
 import authorizeWithGithub from '../graphql/mutations/authorizeWithGithub.graphql';
 import { setServerCookie } from '../utils/cookies';
-import { decodeJWT, encodeJWT, isValidJWT } from '../utils/jwtUtils';
-import getCookie from 'react-use-cookie';
+import { encodeJWT, isValidJWT } from '../utils/jwtUtils';
 
 interface Props {
   user?: User;

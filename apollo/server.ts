@@ -1,6 +1,5 @@
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-micro';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { Resolvers } from '../graphql/generated/graphql-types';
 import { ApolloServerContext, Context } from './apolloServerContext';
 import { authorizeWithGithubResolver } from './resolvers/authorizeWithGithubResolver';
