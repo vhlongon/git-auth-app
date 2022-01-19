@@ -1,12 +1,6 @@
 import { decode, sign, verify } from 'jsonwebtoken';
-import { User } from '../graphql/generated/graphql-types';
 
-type EncodeData = Pick<
-  User,
-  'accessToken' | 'avatarUrl' | 'id' | 'login' | 'name'
->;
-
-export const encodeJWT = (data: EncodeData, secret: string) => {
+export const encodeJWT = (data: Record<string, unknown>, secret: string) => {
   const { accessToken, avatarUrl, id, login, name } = data;
   const jwtPayload = {
     login,
@@ -19,8 +13,11 @@ export const encodeJWT = (data: EncodeData, secret: string) => {
   return sign(jwtPayload, secret, { expiresIn: '1h' });
 };
 
-export const decodeJWT = (token: string): EncodeData => {
-  return decode(token) as EncodeData;
+export const decodeJWT = <T = Record<string, unknown>>(
+  token: string,
+): T | undefined => {
+  const decodedData = (decode(token) as T) ?? undefined;
+  return decodedData;
 };
 
 export const isValidJWT = (token: string, secret: string) => {

@@ -42,7 +42,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
   return {
     props: {
       loginUrl: data.githubLoginUrl.url,
-      apolloStaticCache: client.cache.extract(),
     },
   };
 };

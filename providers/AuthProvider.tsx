@@ -6,14 +6,17 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { getCookie, setCookie } from 'react-use-cookie';
 import { User } from '../graphql/generated/graphql-types';
 import { parseCookie } from '../utils/cookies';
 import { decodeJWT, isValidJWT } from '../utils/jwtUtils';
 
+type AuthSessionUser = Pick<
+  User,
+  'accessToken' | 'avatarUrl' | 'id' | 'login' | 'name'
+>;
 interface AuthContextProps {
   isLoggedIn: boolean;
-  user?: Pick<User, 'accessToken' | 'avatarUrl' | 'id' | 'login' | 'name'>;
+  user?: AuthSessionUser;
   logOut: () => void;
 }
 export const AuthContext = createContext<AuthContextProps>({
@@ -27,24 +30,39 @@ interface AuthProviderProps {
   initialCookie: string;
 }
 
+const getAuthState = (
+  cookie?: string,
+): { isLoggedIn: boolean; user: AuthSessionUser | undefined } => {
+  const { jwt } = parseCookie(cookie) ?? {};
+  const parsedCookie = jwt ? JSON.parse(`${jwt}`) : {};
+  const { jwtToken, accessToken } = parsedCookie;
+  const validJWT = isValidJWT(jwtToken, accessToken);
+  const user = validJWT ? decodeJWT<AuthSessionUser>(jwtToken) : undefined;
+
+  return { isLoggedIn: validJWT, user };
+};
+
 export const AuthProvider = ({
   children,
   initialCookie,
 }: AuthProviderProps) => {
-  const { jwt } = parseCookie(initialCookie) ?? {};
-  const clientCookie = getCookie('jwt');
-  const { jwtToken, accessToken } = JSON.parse(
-    (jwt as string) || clientCookie || '{}',
+  const authSession = getAuthState(initialCookie);
+  const [isLoggedIn, setIsLoggedIn] = useState(authSession.isLoggedIn);
+  const [user, setUser] = useState<AuthSessionUser | undefined>(
+    authSession.user,
   );
-
   const router = useRouter();
-  const validJWT = isValidJWT(jwtToken, accessToken);
-  const [isLoggedIn, setIsLoggedIn] = useState(validJWT);
-  const user = isLoggedIn ? decodeJWT(jwtToken) : undefined;
 
   const logOut = useCallback(() => {
     setIsLoggedIn(false);
-    setCookie('jwt', '');
+    setUser(undefined);
+    fetch('/api/logout', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
     router.push('/');
   }, [router]);
 
