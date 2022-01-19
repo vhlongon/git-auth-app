@@ -1,6 +1,6 @@
 type User {
   login: String
-  name: String!
+  name: String
   id: Int!
   avatarUrl: String
   url: String!
@@ -31,6 +31,52 @@ type LoginUrlPayload {
   url: String!
 }
 
+enum AuthorAssociation {
+  OWNER
+  COLLABORATOR
+  CONTRIBUTOR
+  MEMBER
+  ORGANIZATION_MEMBER
+  OTHER
+}
+
+type Reactions {
+  url: String!
+  totalCount: Int!
+  upVote: Int!
+  downVote: Int!
+  laugh: Int!
+  hooray: Int!
+  confused: Int!
+  heart: Int!
+  rocket: Int!
+  eyes: Int!
+}
+
+type Comment {
+  id: Int!
+  body: String!
+  createdAt: String!
+  updatedAt: String!
+  user: User!
+  issueUrl: String!
+  authorAssociation: AuthorAssociation!
+  url: String!
+  htmlUrl: String!
+  reactions: Reactions
+}
+
+type Issue {
+  url: String!
+  commentsUrl: String!
+  id: Int!
+  number: Int!
+  user: User
+  repositoryUrl: String!
+  htmlUrl: String!
+  comments: [Comment!]
+}
+
 type Repo {
   createdAt: String!
   description: String
@@ -48,6 +94,8 @@ type Repo {
   updatedAt: String!
   url: String!
   watchersCount: Int
+  issuesUrl: String!
+  issues: [Issue!]
 }
 
 type Query {

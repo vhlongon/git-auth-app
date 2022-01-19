@@ -8,12 +8,24 @@ import { githubLoginUrl } from './resolvers/githubLoginUrlResolver';
 import { meResolver } from './resolvers/meResolver';
 import { reposResolver } from './resolvers/reposResolver';
 import typeDefs from '../graphql/schema.graphql';
+import { issueResolver } from './resolvers/IssueResolver';
+import { commentResolver } from './resolvers/commentResolver';
+import { reactionResolver } from './resolvers/reactionResolver';
 
 const resolvers: Resolvers<Context> = {
   Query: {
     me: meResolver,
     githubLoginUrl: githubLoginUrl,
     repos: reposResolver,
+  },
+  Repo: {
+    issues: issueResolver,
+  },
+  Issue: {
+    comments: commentResolver,
+  },
+  Comment: {
+    reactions: reactionResolver,
   },
   Mutation: {
     authorizeWithGithub: authorizeWithGithubResolver,

@@ -1,7 +1,7 @@
 import { MutationResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser, Credentials } from '../../types';
-import { transforUserResponse } from '../../utils/transformResponseData';
 import { requestGithubToken } from './getGithubAccessTokenResolver';
+import camelCase from 'camelcase-keys';
 
 export const requestGithubUserAccount = async (
   token: string,
@@ -37,5 +37,5 @@ export const authorizeWithGithubResolver: MutationResolvers['authorizeWithGithub
     };
     const { user, accessToken } = await requestGithubUser(credentials);
 
-    return { user: transforUserResponse(user), accessToken };
+    return { user: camelCase(user), accessToken };
   };

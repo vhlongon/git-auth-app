@@ -1,7 +1,7 @@
 import { Context } from '../apolloServerContext';
-import { transformRepoResponse } from '../../utils/transformResponseData';
 import { QueryResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser } from '../../types';
+import camelCase from 'camelcase-keys';
 
 export type Permissions = {
   admin: boolean;
@@ -102,7 +102,7 @@ export const getGithubUserRepos = async (
   });
 
   if (!res.ok) {
-    console.error('error requestGithubUserAccount', res);
+    console.error('error getGithubUserRepos', res);
     throw new Error(`Failed to fetch github user repos: ${res.statusText}`);
   }
 
@@ -119,5 +119,5 @@ export const reposResolver: QueryResolvers<Context>['repos'] = async (
   }
 
   const repos = await getGithubUserRepos(context.accessToken);
-  return repos?.length ? transformRepoResponse(repos) : null;
+  return repos?.length ? repos.map(r => camelCase(r)) : null;
 };
