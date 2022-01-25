@@ -126,8 +126,6 @@ export const reposResolver: QueryResolvers<Context>['repos'] = async (
   }
 
   const repos = await getGithubUserRepos(context.accessToken, args);
-  repos?.forEach(repo => {
-    console.log(repo.name);
-  });
+
   return repos?.length ? repos.map(r => camelCase(r)) : null;
 };
