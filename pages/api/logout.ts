@@ -1,5 +1,4 @@
-import { setServerCookie } from './../../utils/cookies';
-import cookie from 'cookie';
+import { setServerCookie } from './../../utils/cookieUtils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const logout = (req: NextApiRequest, res: NextApiResponse) => {
