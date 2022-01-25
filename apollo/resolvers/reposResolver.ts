@@ -2,6 +2,7 @@ import { Context } from '../apolloServerContext';
 import { QueryResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser } from '../../types';
 import camelCase from 'camelcase-keys';
+import { setHeadersWithAuthorization } from '../../utils/authUtils';
 
 export type Permissions = {
   admin: boolean;
@@ -95,10 +96,7 @@ export const getGithubUserRepos = async (
   token: string,
 ): Promise<RepoPayload[] | null> => {
   const res = await fetch(`${process.env.RESOURCE_ENDPOINT}/user/repos`, {
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: '/*',
-    },
+    headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
   });
 
   if (!res.ok) {

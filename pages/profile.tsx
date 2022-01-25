@@ -7,7 +7,7 @@ import {
   GetMeQueryVariables,
 } from '../graphql/generated/graphql-types';
 import Image from 'next/image';
-import { redirectNonAuthenticated } from '../utils/authUtils';
+import { redirectNonAuthenticated, setHeadersWithAuthorization } from '../utils/authUtils';
 import { getServerAuthToken } from '../utils/cookieUtils';
 
 const Item: React.FC<{ element: keyof JSX.IntrinsicElements }> = ({
@@ -51,9 +51,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { data } = await client.query<GetMeQuery, GetMeQueryVariables>({
     query: meQuery,
     context: {
-      headers: {
-        Authorization: `token ${accessToken}`,
-      },
+      headers: setHeadersWithAuthorization(accessToken),
     },
   });
 

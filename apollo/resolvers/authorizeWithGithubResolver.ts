@@ -2,15 +2,13 @@ import { MutationResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser, Credentials } from '../../types';
 import { requestGithubToken } from './getGithubAccessTokenResolver';
 import camelCase from 'camelcase-keys';
+import { setHeadersWithAuthorization } from '../../utils/authUtils';
 
 export const requestGithubUserAccount = async (
   token: string,
 ): Promise<AuthPayloadUser> => {
   const res = await fetch(`${process.env.RESOURCE_ENDPOINT}/user`, {
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: '/*',
-    },
+    headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
   });
 
   if (!res.ok) {

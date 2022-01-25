@@ -2,6 +2,7 @@ import { Context } from '../apolloServerContext';
 import { RepoResolvers } from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser } from '../../types';
 import camelCase from 'camelcase-keys';
+import { setHeadersWithAuthorization } from '../../utils/authUtils';
 
 export type IssuePayload = {
   url: string;
@@ -18,10 +19,7 @@ export const getRepoIssues = async (
   url: string,
 ): Promise<IssuePayload[] | null> => {
   const res = await fetch(`${process.env.RESOURCE_ENDPOINT}/${url}`, {
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: '/*',
-    },
+    headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
   });
 
   if (!res.ok) {

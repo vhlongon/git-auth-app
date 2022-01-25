@@ -7,6 +7,7 @@ import {
 import { Context } from '../apolloServerContext';
 import { AuthPayloadUser } from '../../types';
 import camelCase from 'camelcase-keys';
+import { setHeadersWithAuthorization } from '../../utils/authUtils';
 
 export type ReactionPayload = {
   url: string;
@@ -39,10 +40,7 @@ export const getComments = async (
   url: string,
 ): Promise<CommentPayload[] | null> => {
   const res = await fetch(url, {
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: '/*',
-    },
+    headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
   });
 
   if (!res.ok) {
