@@ -16,7 +16,12 @@ type State = {
 
 export const ApolloServerContext = async ({ req }: { req: NextApiRequest }) => {
   const authHeader = req.headers.authorization;
-  const [, accessToken] = authHeader ? authHeader.split(' ') : [];
+  const [, accessTokenFromHeader] = authHeader ? authHeader.split(' ') : [];
+  const { accessToken: accessTokenFromCookies } = JSON.parse(
+    req.cookies?.jwt ?? '{}',
+  );
+
+  const accessToken = accessTokenFromHeader || accessTokenFromCookies;
 
   if (!accessToken) {
     return { isLoggedIn: false, user: null, accessToken: null };
