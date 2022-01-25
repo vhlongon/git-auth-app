@@ -1,5 +1,5 @@
 type User {
-  login: String
+  login: String!
   name: String
   id: Int!
   avatarUrl: String
