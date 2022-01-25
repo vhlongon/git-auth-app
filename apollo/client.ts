@@ -24,7 +24,24 @@ const createHttpLink = () => {
 };
 
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          repos: {
+            // Don't cache separate results based on
+            // any of this field's arguments.
+            keyArgs: false,
+            // Concatenate the incoming list items with
+            // the existing list items.
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+        },
+      },
+    },
+  }),
   ssrMode: typeof window === 'undefined',
   link: authLink.concat(createHttpLink()),
 });

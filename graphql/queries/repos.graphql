@@ -1,8 +1,9 @@
-query getRepos {
-  repos {
+query getRepos($page: Int, $perPage: Int) {
+  repos(page: $page, perPage: $perPage) {
     name
     homepage
     size
     url
+    htmlUrl
   }
 }

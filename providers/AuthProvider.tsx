@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { User } from '../graphql/generated/graphql-types';
-import { parseCookie } from '../utils/cookies';
+import { parseCookie } from '../utils/cookieUtils';
 import { decodeJWT, isValidJWT } from '../utils/jwtUtils';
 
 type AuthSessionUser = Pick<

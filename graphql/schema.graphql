@@ -83,6 +83,7 @@ type Repo {
   forksCount: Int
   fullName: String!
   homepage: String
+  htmlUrl: String!
   id: Int!
   language: String
   name: String!
@@ -101,7 +102,7 @@ type Repo {
 type Query {
   githubLoginUrl(scope: [Scope!]): LoginUrlPayload!
   me: User
-  repos: [Repo!]
+  repos(page: Int = 0, perPage: Int = 30): [Repo!]
 }
 
 type Mutation {

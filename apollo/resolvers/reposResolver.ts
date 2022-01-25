@@ -1,5 +1,8 @@
 import { Context } from '../apolloServerContext';
-import { QueryResolvers } from '../../graphql/generated/graphql-types';
+import {
+  QueryReposArgs,
+  QueryResolvers,
+} from '../../graphql/generated/graphql-types';
 import { AuthPayloadUser } from '../../types';
 import camelCase from 'camelcase-keys';
 import { setHeadersWithAuthorization } from '../../utils/authUtils';
@@ -94,10 +97,16 @@ export type RepoPayload = {
 
 export const getGithubUserRepos = async (
   token: string,
+  args: QueryReposArgs,
 ): Promise<RepoPayload[] | null> => {
-  const res = await fetch(`${process.env.RESOURCE_ENDPOINT}/user/repos`, {
-    headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
-  });
+  const params = `page=${args.page}&per_page=${args.perPage}`;
+
+  const res = await fetch(
+    `${process.env.RESOURCE_ENDPOINT}/user/repos?${params}`,
+    {
+      headers: setHeadersWithAuthorization(token, { Accept: '/*' }),
+    },
+  );
 
   if (!res.ok) {
     console.error('error getGithubUserRepos', res);
@@ -116,6 +125,9 @@ export const reposResolver: QueryResolvers<Context>['repos'] = async (
     return null;
   }
 
-  const repos = await getGithubUserRepos(context.accessToken);
+  const repos = await getGithubUserRepos(context.accessToken, args);
+  repos?.forEach(repo => {
+    console.log(repo.name);
+  });
   return repos?.length ? repos.map(r => camelCase(r)) : null;
 };
