@@ -10,6 +10,7 @@ const Header = () => {
   const isStart = router.pathname === '/';
   const isProfile = router.pathname === '/profile';
   const isRepos = router.pathname === '/repos';
+  const isLogin = router.pathname === '/login';
 
   const handleClick = () => {
     if (isLoggedIn) {
@@ -49,9 +50,6 @@ const Header = () => {
               Start
             </Button>
           )}
-          <Button onClick={handleClick}>
-            {isLoggedIn ? 'Log out' : 'Log in'}
-          </Button>
           {isLoggedIn && (
             <>
               <Button
@@ -70,6 +68,9 @@ const Header = () => {
               </Button>
             </>
           )}
+          <Button onClick={handleClick} disabled={!isLoggedIn && isLogin}>
+            {isLoggedIn ? 'Log out' : 'Log in'}
+          </Button>
         </div>
       </>
     </header>
