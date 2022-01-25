@@ -8,6 +8,8 @@ const Header = () => {
   const { isLoggedIn, user, logOut } = useAuth();
   const router = useRouter();
   const isStart = router.pathname === '/';
+  const isProfile = router.pathname === '/profile';
+  const isRepos = router.pathname === '/repos';
 
   const handleClick = () => {
     if (isLoggedIn) {
@@ -18,9 +20,9 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-4 border-b-amber-200 border-b-4 bg-amber-100 text-gray-500">
+    <header className="flex flex-col items-center justify-between p-4 border-b-amber-200 border-b-4 bg-amber-100 text-gray-500 md:flex-row">
       <>
-        <div>
+        <div className="mb-2 text-center md:mb-0">
           {isLoggedIn && user ? (
             <div className="flex items-center">
               {user.avatarUrl && (
@@ -29,28 +31,45 @@ const Header = () => {
                   width="30"
                   height="30"
                   src={user.avatarUrl}
-                  alt={user.name}
+                  alt={user.name || user.login}
                 />
               )}
               <h2 className="font-bold text text-l ml-4">{user?.name}</h2>
             </div>
           ) : (
-            <h2 className="font-bold text text-l">You are not logged-in</h2>
+            <h2 className="font-bold text text-l">You are not logged in</h2>
           )}
         </div>
         <div className="flex">
           {!isStart && (
             <Button
-              className="mr-4"
               onClick={() => {
                 router.push('/');
               }}>
-              Back to start
+              Start
             </Button>
           )}
           <Button onClick={handleClick}>
             {isLoggedIn ? 'Log out' : 'Log in'}
           </Button>
+          {isLoggedIn && (
+            <>
+              <Button
+                disabled={isProfile}
+                onClick={() => {
+                  router.push('/profile');
+                }}>
+                Profile
+              </Button>
+              <Button
+                disabled={isRepos}
+                onClick={() => {
+                  router.push('/repos');
+                }}>
+                Repos
+              </Button>
+            </>
+          )}
         </div>
       </>
     </header>
