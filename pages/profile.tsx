@@ -37,8 +37,6 @@ const Profile = ({ me }: GetMeQuery) => {
           <Item element="p">Location: {me.location}</Item>
           <Item element="p">Email: {me.email}</Item>
           <Item element="p">Followers: {me.followers}</Item>
-          <Item element="p">Public gists: {me.publicGists}</Item>
-          <Item element="p">Public repos: {me.publicRepos}</Item>
         </div>
       </div>
     </div>
