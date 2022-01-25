@@ -8,6 +8,7 @@ import {
 } from '../graphql/generated/graphql-types';
 import Image from 'next/image';
 import { redirectNonAuthenticated } from '../utils/authUtils';
+import { getServerAuthToken } from '../utils/cookieUtils';
 
 const Item: React.FC<{ element: keyof JSX.IntrinsicElements }> = ({
   children,
@@ -44,9 +45,7 @@ const Profile = ({ me }: GetMeQuery) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { jwt } = context.req.cookies;
-  const { jwtToken, accessToken } = JSON.parse(jwt || '{}');
-
+  const { jwtToken, accessToken } = getServerAuthToken(context);
   redirectNonAuthenticated(jwtToken, accessToken);
 
   const { data } = await client.query<GetMeQuery, GetMeQueryVariables>({

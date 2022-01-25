@@ -8,7 +8,7 @@ import {
 } from '../graphql/generated/graphql-types';
 import authorizeWithGithub from '../graphql/mutations/authorizeWithGithub.graphql';
 import { redirectNonAuthenticated } from '../utils/authUtils';
-import { setServerCookie } from '../utils/cookieUtils';
+import { getServerAuthToken, setServerCookie } from '../utils/cookieUtils';
 import { encodeJWT } from '../utils/jwtUtils';
 
 interface Props {
@@ -42,9 +42,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { code } = context.query;
 
   if (typeof code === 'string') {
-    const { jwt } = context.req.cookies;
-    const { jwtToken, accessToken } = JSON.parse(jwt || '{}');
-
+    const { jwtToken, accessToken } = getServerAuthToken(context);
     redirectNonAuthenticated(jwtToken, accessToken);
 
     try {

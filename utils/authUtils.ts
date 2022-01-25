@@ -1,5 +1,3 @@
-import { GetServerSidePropsContext } from 'next';
-import { getServerAuthToken } from './cookieUtils';
 import { isValidJWT } from './jwtUtils';
 
 export const redirectNonAuthenticated = (
