@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import { isValidJWT } from '../utils/jwtUtils';
 import meQuery from '../graphql/queries/me.graphql';
 import { client } from '../apollo/client';
 import {
@@ -8,6 +7,7 @@ import {
   GetMeQueryVariables,
 } from '../graphql/generated/graphql-types';
 import Image from 'next/image';
+import { redirectNonAuthenticated } from '../utils/authUtils';
 
 const Item: React.FC<{ element: keyof JSX.IntrinsicElements }> = ({
   children,
@@ -29,7 +29,7 @@ const Profile = ({ me }: GetMeQuery) => {
             width="60"
             height="60"
             src={me.avatarUrl}
-            alt={me.name}
+            alt={me.name || me.login}
           />
         )}
         <div className="flex flex-col items mt-4">
@@ -49,14 +49,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { jwt } = context.req.cookies;
   const { jwtToken, accessToken } = JSON.parse(jwt || '{}');
 
-  if (!isValidJWT(jwtToken, accessToken)) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
+  redirectNonAuthenticated(jwtToken, accessToken);
 
   const { data } = await client.query<GetMeQuery, GetMeQueryVariables>({
     query: meQuery,
