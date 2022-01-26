@@ -40,60 +40,55 @@ interface Params {
 export const getServerSideProps: GetServerSideProps = async context => {
   const { code } = context.query;
 
-  if (typeof code === 'string') {
-    const { jwtToken, accessToken } = getServerAuthToken(context);
-    if (!isValidJWT(jwtToken, accessToken)) {
+  if (!code && typeof code !== 'string') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  try {
+    const { data } = await client.mutate<
+      AuthorizeWithGitHubMutation,
+      AuthorizeWithGitHubMutationVariables
+    >({
+      mutation: authorizeWithGithub,
+      variables: {
+        code: code as string,
+      },
+    });
+
+    if (data) {
+      const { user, accessToken } = data.authorizeWithGithub;
+      const userWithAccessToken = { ...user, accessToken };
+      const jwtToken = encodeJWT(userWithAccessToken, accessToken);
+
+      setServerCookie(
+        context.res,
+        'jwt',
+        JSON.stringify({ jwtToken, accessToken }),
+        {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development',
+          maxAge: 60 * 60,
+        },
+      );
+
       return {
         redirect: {
-          destination: '/',
+          destination: '/profile',
           permanent: false,
         },
       };
     }
-
-    try {
-      const { data } = await client.mutate<
-        AuthorizeWithGitHubMutation,
-        AuthorizeWithGitHubMutationVariables
-      >({
-        mutation: authorizeWithGithub,
-        variables: {
-          code,
-        },
-      });
-
-      if (data) {
-        const { user, accessToken } = data.authorizeWithGithub;
-        const userWithAccessToken = { ...user, accessToken };
-        const jwtToken = encodeJWT(userWithAccessToken, accessToken);
-
-        setServerCookie(
-          context.res,
-          'jwt',
-          JSON.stringify({ jwtToken, accessToken }),
-          {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
-            maxAge: 60 * 60,
-            sameSite: 'strict',
-            path: '/',
-          },
-        );
-
-        return {
-          redirect: {
-            destination: '/profile',
-            permanent: false,
-          },
-        };
-      }
-    } catch (error) {
-      return {
-        props: {
-          error: (error as string)?.toString() ?? 'an error occurred',
-        },
-      };
-    }
+  } catch (error) {
+    return {
+      props: {
+        error: (error as string)?.toString() ?? 'an error occurred',
+      },
+    };
   }
 
   return {
