@@ -30,8 +30,8 @@ MyApp.getInitialProps = async (appctx: AppContext) => {
   const { ctx, Component } = appctx;
   const appProps = { showActions: false, cookie: '' };
 
-  if (typeof window === 'undefined') {
-    appProps.cookie = ctx.req?.headers?.cookie ?? '';
+  if (typeof window === 'undefined' && ctx.req?.headers?.cookie) {
+    appProps.cookie = ctx.req.headers.cookie;
   }
 
   if (Component.getServerSideProps) {
