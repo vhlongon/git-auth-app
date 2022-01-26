@@ -6,13 +6,11 @@ import {
   GetMeQueryVariables,
   useGetReposQuery,
 } from '../graphql/generated/graphql-types';
-import {
-  redirectNonAuthenticated,
-  setHeadersWithAuthorization,
-} from '../utils/authUtils';
+import { setHeadersWithAuthorization } from '../utils/authUtils';
 import { getServerAuthToken } from '../utils/cookieUtils';
 import meQuery from '../graphql/queries/me.graphql';
 import Button from '../components/Button';
+import { isValidJWT } from '../utils/jwtUtils';
 
 const Repos = ({ totalRepos }: { totalRepos: number }) => {
   const { data, fetchMore, loading, networkStatus } = useGetReposQuery({
@@ -73,7 +71,14 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { jwtToken, accessToken } = getServerAuthToken(context);
-  redirectNonAuthenticated(jwtToken, accessToken);
+  if (!isValidJWT(jwtToken, accessToken)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
   const { data: meData } = await client.query<GetMeQuery, GetMeQueryVariables>({
     query: meQuery,
@@ -81,8 +86,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
       headers: setHeadersWithAuthorization(accessToken),
     },
   });
-
-  console.log(meData);
 
   return {
     props: { totalRepos: meData.me?.publicRepos },

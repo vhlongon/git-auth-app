@@ -7,8 +7,11 @@ import {
   GetMeQueryVariables,
 } from '../graphql/generated/graphql-types';
 import Image from 'next/image';
-import { redirectNonAuthenticated, setHeadersWithAuthorization } from '../utils/authUtils';
+import {
+  setHeadersWithAuthorization,
+} from '../utils/authUtils';
 import { getServerAuthToken } from '../utils/cookieUtils';
+import { isValidJWT } from '../utils/jwtUtils';
 
 const Item: React.FC<{ element: keyof JSX.IntrinsicElements }> = ({
   children,
@@ -46,7 +49,14 @@ const Profile = ({ me }: GetMeQuery) => {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { jwtToken, accessToken } = getServerAuthToken(context);
-  redirectNonAuthenticated(jwtToken, accessToken);
+  if (!isValidJWT(jwtToken, accessToken)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
   const { data } = await client.query<GetMeQuery, GetMeQueryVariables>({
     query: meQuery,
