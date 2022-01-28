@@ -10,6 +10,8 @@ query getRepo($name: String!) {
       url
       htmlUrl
       id
+      number
+      title
     }
   }
 }

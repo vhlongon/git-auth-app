@@ -75,6 +75,7 @@ type Issue {
   repositoryUrl: String!
   htmlUrl: String!
   comments: [Comment!]
+  title: String!
 }
 
 type Repo {

@@ -15,7 +15,33 @@ const Repo = ({ repo }: { repo: Repo }) => {
   const router = useRouter();
   const { name } = router.query;
 
-  return <p>Repo: {name}</p>;
+  console.log(repo);
+
+  if (!repo) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <h1>Repo: {name}</h1>
+        <p>No repo data</p>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <h1>Repo: {name}</h1>
+      {repo.issues && (
+        <>
+          <h2>Issues:</h2> 
+          <ul>
+            {repo.issues.map(issue => (
+              <li key={issue.id}>
+                {issue.number} ⦿ {issue.title}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {

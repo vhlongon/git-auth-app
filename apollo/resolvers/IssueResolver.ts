@@ -12,6 +12,7 @@ export type IssuePayload = {
   user: AuthPayloadUser;
   repository_url: string;
   html_url: string;
+  title: string;
 };
 
 export const getRepoIssues = async (
