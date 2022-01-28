@@ -1,0 +1,15 @@
+query getRepo($name: String!) {
+  repo(name: $name) {
+    name
+    homepage
+    size
+    url
+    htmlUrl
+    createdAt
+    issues {
+      url
+      htmlUrl
+      id
+    }
+  }
+}

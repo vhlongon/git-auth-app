@@ -1,3 +1,4 @@
+import { repoResolver } from './resolvers/repoResolver';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-micro';
 import { Resolvers } from '../graphql/generated/graphql-types';
@@ -17,6 +18,7 @@ const resolvers: Resolvers<Context> = {
     me: meResolver,
     githubLoginUrl: githubLoginUrl,
     repos: reposResolver,
+    repo: repoResolver,
   },
   Repo: {
     issues: issueResolver,

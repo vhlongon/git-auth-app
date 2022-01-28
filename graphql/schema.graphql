@@ -103,6 +103,7 @@ type Query {
   githubLoginUrl(scope: [Scope!]): LoginUrlPayload!
   me: User
   repos(page: Int = 0, perPage: Int = 30): [Repo!]
+  repo(name: String!): Repo
 }
 
 type Mutation {

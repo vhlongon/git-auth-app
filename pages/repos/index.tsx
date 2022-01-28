@@ -1,16 +1,17 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import { client } from '../apollo/client';
+import { client } from '../../apollo/client';
 import {
   GetMeQuery,
   GetMeQueryVariables,
   useGetReposQuery,
-} from '../graphql/generated/graphql-types';
-import { setHeadersWithAuthorization } from '../utils/authUtils';
-import { getServerAuthToken } from '../utils/cookieUtils';
-import meQuery from '../graphql/queries/me.graphql';
-import Button from '../components/Button';
-import { isValidJWT } from '../utils/jwtUtils';
+} from '../../graphql/generated/graphql-types';
+import { setHeadersWithAuthorization } from '../../utils/authUtils';
+import { getServerAuthToken } from '../../utils/cookieUtils';
+import meQuery from '../../graphql/queries/me.graphql';
+import Button from '../../components/Button';
+import { isValidJWT } from '../../utils/jwtUtils';
+import Link from 'next/link';
 
 const Repos = ({ totalRepos }: { totalRepos: number }) => {
   const { data, fetchMore, loading, networkStatus } = useGetReposQuery({
@@ -45,9 +46,7 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
       <ul className="max-w-xs mx-auto my-4">
         {data.repos.map(repo => (
           <li className="flex" key={repo.name}>
-            <a target="_blank" rel="noreferrer" href={repo.htmlUrl}>
-              {repo.name}
-            </a>
+            <Link href={`repos/${repo.name}`}>{repo.name}</Link>
           </li>
         ))}
       </ul>
