@@ -6,17 +6,10 @@ import {
   GetMeQuery,
   GetMeQueryVariables,
 } from '../graphql/generated/graphql-types';
-import Image from 'next/image';
-import {
-  setHeadersWithAuthorization,
-} from '../utils/authUtils';
+import { setHeadersWithAuthorization } from '../utils/authUtils';
 import { getServerAuthToken } from '../utils/cookieUtils';
 import { isValidJWT } from '../utils/jwtUtils';
-
-const Item: React.FC<{ element: keyof JSX.IntrinsicElements }> = ({
-  children,
-  element: Element,
-}) => <Element className="text-slate-600">{children}</Element>;
+import ProfileCard from '../components/ProfileCard';
 
 const Profile = ({ me }: GetMeQuery) => {
   if (!me) {
@@ -25,24 +18,7 @@ const Profile = ({ me }: GetMeQuery) => {
 
   return (
     <div className="flex flex-1 flex-col justify-center items-center">
-      <h1 className="h1 mb-4 font-semibold text-2xl">Profile page</h1>
-      <div className="flex flex-col items-center border-4 border-amber-200 rounded p-8">
-        {me.avatarUrl && (
-          <Image
-            className="rounded-full w-16 h-16"
-            width="60"
-            height="60"
-            src={me.avatarUrl}
-            alt={me.name || me.login}
-          />
-        )}
-        <div className="flex flex-col items mt-4">
-          <Item element="h2">Name: {me.name}</Item>
-          <Item element="p">Location: {me.location}</Item>
-          <Item element="p">Email: {me.email}</Item>
-          <Item element="p">Followers: {me.followers}</Item>
-        </div>
-      </div>
+      <ProfileCard {...me} />
     </div>
   );
 };
