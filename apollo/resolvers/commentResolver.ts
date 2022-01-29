@@ -77,7 +77,7 @@ const transformReactions = (
   return null;
 };
 
-const transformComments = (
+export const transformComments = (
   comments: CommentPayload[] | null,
 ): Comment[] | [] => {
   if (comments && comments.length > 0) {

@@ -1,0 +1,22 @@
+query getComments($number: Int!, $name: String!) {
+  comments(number: $number, name: $name) {
+    id
+    body
+    authorAssociation
+    reactions {
+      upVote
+      downVote
+      laugh
+      hooray
+      confused
+      heart
+      rocket
+      eyes
+    }
+    htmlUrl
+    createdAt
+    user {
+      login
+    }
+  }
+}

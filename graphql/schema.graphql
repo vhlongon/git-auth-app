@@ -38,6 +38,7 @@ enum AuthorAssociation {
   MEMBER
   ORGANIZATION_MEMBER
   OTHER
+  NONE
 }
 
 type Reactions {
@@ -105,6 +106,7 @@ type Query {
   me: User
   repos(page: Int = 0, perPage: Int = 30): [Repo!]
   repo(name: String!): Repo
+  comments(number: Int!, name: String!): [Comment!]
 }
 
 type Mutation {

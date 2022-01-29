@@ -12,6 +12,7 @@ import typeDefs from '../graphql/schema.graphql';
 import { issueResolver } from './resolvers/IssueResolver';
 import { commentResolver } from './resolvers/commentResolver';
 import { reactionResolver } from './resolvers/reactionResolver';
+import { commentsResolver } from './resolvers/commentsResolver';
 
 const resolvers: Resolvers<Context> = {
   Query: {
@@ -19,6 +20,7 @@ const resolvers: Resolvers<Context> = {
     githubLoginUrl: githubLoginUrl,
     repos: reposResolver,
     repo: repoResolver,
+    comments: commentsResolver,
   },
   Repo: {
     issues: issueResolver,
