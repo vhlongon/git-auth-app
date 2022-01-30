@@ -11,7 +11,7 @@ import {
   useGetCommentsLazyQuery,
 } from '../../graphql/generated/graphql-types';
 import repoQuery from '../../graphql/queries/repo.graphql';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Modal from '../../components/Modal';
 import Comments from '../../components/Comments';
 import List from '../../components/List';
@@ -22,9 +22,16 @@ import CommentInput from '../../components/CommentInput';
 const Repo = ({ repo }: { repo: Repo }) => {
   const [modalOpen, setOpenModal] = useState(false);
   const [getComments, commentsData] = useGetCommentsLazyQuery();
-
+  const [currentIssue, setCurrentIssue] = useState<number | null>(null);
+  const bottomElement = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { name } = router.query;
+
+  const scrollToBottom = () => {
+    if (bottomElement.current) {
+      bottomElement.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   if (!repo) {
     return (
@@ -59,6 +66,7 @@ const Repo = ({ repo }: { repo: Repo }) => {
                     },
                   });
                   setOpenModal(true);
+                  setCurrentIssue(number);
                 }}>
                 <div>
                   <span className="text-gray-400 font-semibold text mr-2">
@@ -70,7 +78,10 @@ const Repo = ({ repo }: { repo: Repo }) => {
               </button>
             )}
           />
-          <Modal isOpen={modalOpen} setModalOpen={setOpenModal}>
+          <Modal
+            isOpen={modalOpen}
+            setModalOpen={setOpenModal}
+            onAfterOpen={scrollToBottom}>
             {commentsData.loading && (
               <div className="min-h-[400px] flex items-center justify-center">
                 <div className="-mt-5">
@@ -83,12 +94,17 @@ const Repo = ({ repo }: { repo: Repo }) => {
                 <p>Error loading comments</p>
               </div>
             )}
-            {commentsData.data && (
+            {commentsData.data && currentIssue && (
               <>
                 <Comments comments={commentsData.data.comments} />
-                <CommentInput />
+                <CommentInput
+                  repoName={repo.name}
+                  issueNumber={currentIssue}
+                  onCommentCreated={scrollToBottom}
+                />
               </>
             )}
+            <div id="bottomElement" ref={bottomElement} />
           </Modal>
         </>
       ) : (

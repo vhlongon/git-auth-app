@@ -1,3 +1,4 @@
+import { createCommentResolver } from './resolvers/createCommentResolver';
 import { repoResolver } from './resolvers/repoResolver';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-micro';
@@ -34,6 +35,7 @@ const resolvers: Resolvers<Context> = {
   Mutation: {
     authorizeWithGithub: authorizeWithGithubResolver,
     getGithubAccessToken: getGithubAccessTokenResolver,
+    createComment: createCommentResolver,
   },
 };
 
