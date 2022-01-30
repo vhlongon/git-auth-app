@@ -8,36 +8,72 @@ import {
   GetRepoQuery,
   GetRepoQueryVariables,
   Repo,
+  useGetCommentsLazyQuery,
 } from '../../graphql/generated/graphql-types';
 import repoQuery from '../../graphql/queries/repo.graphql';
+import { useState } from 'react';
+import Modal from '../../components/Modal';
+import Comment from '../../components/Comments';
+import Comments from '../../components/Comments';
+import List from '../../components/List';
+import EditIcon from '../../components/EditIcon';
 
 const Repo = ({ repo }: { repo: Repo }) => {
+  const [modalOpen, setOpenModal] = useState(false);
+  const [getComments, commentsData] = useGetCommentsLazyQuery();
+
   const router = useRouter();
   const { name } = router.query;
-
-  console.log(repo);
 
   if (!repo) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <h1>Repo: {name}</h1>
+        <h1 className="text-3xl">Repo: {name}</h1>
         <p>No repo data</p>
       </div>
     );
   }
+
   return (
-    <div>
-      <h1>Repo: {name}</h1>
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-5xl text-center mt-6">
+        <a href={repo.htmlUrl}>{name}</a>
+      </h1>
       {repo.issues && (
         <>
           <h2>Issues:</h2> 
-          <ul>
-            {repo.issues.map(issue => (
-              <li key={issue.id}>
-                {issue.number} ⦿ {issue.title}
-              </li>
-            ))}
-          </ul>
+          <List
+            items={repo.issues}
+            idProp="id"
+            renderItem={({ number, title }) => (
+              <button
+                className="flex items-center justify-between w-full"
+                onClick={() => {
+                  getComments({
+                    variables: {
+                      number: number,
+                      name: repo.name,
+                    },
+                  });
+                  setOpenModal(true);
+                }}>
+                <div>
+                  <span className="text-gray-400 font-semibold text mr-2">
+                    {number}
+                  </span>
+                  <span className="text-slate-500 text-lg">{title}</span>
+                </div>
+                <EditIcon />
+              </button>
+            )}
+          />
+          <Modal isOpen={modalOpen} setModalOpen={setOpenModal}>
+            {commentsData.loading && <p>Loading comments...</p>}
+            {commentsData.error && <p>Error loading comments</p>}
+            {commentsData.data && (
+              <Comments comments={commentsData.data.comments} />
+            )}
+          </Modal>
         </>
       )}
     </div>

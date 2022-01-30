@@ -84,6 +84,7 @@ export const transformComments = (
     return comments.map(comment => ({
       ...camelCase(comment),
       reactions: transformReactions(comment.reactions),
+      user: camelCase(comment.user),
     }));
   }
 

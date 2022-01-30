@@ -12,6 +12,9 @@ import meQuery from '../../graphql/queries/me.graphql';
 import Button from '../../components/Button';
 import { isValidJWT } from '../../utils/jwtUtils';
 import Link from 'next/link';
+import List from '../../components/List';
+import Loading from '../../components/Loading';
+import ArrowIcon from '../../components/ArrowIcon';
 
 const Repos = ({ totalRepos }: { totalRepos: number }) => {
   const { data, fetchMore, loading, networkStatus } = useGetReposQuery({
@@ -24,7 +27,9 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
 
   if (!data && loading) {
     return (
-      <div className="flex flex-1 items-center justify-center">loading...</div>
+      <div className="flex flex-1 items-center justify-center">
+        <Loading size="100px" />
+      </div>
     );
   }
 
@@ -43,14 +48,25 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
 
   return (
     <div className="flex-col items-center justify-center bg-amber-50 p-4">
-      <ul className="max-w-xs mx-auto my-4">
-        {data.repos.map(repo => (
-          <li className="flex" key={repo.name}>
-            <Link href={`repos/${repo.name}`}>{repo.name}</Link>
-          </li>
-        ))}
-      </ul>
-      <div className="flex justify-center">
+      <List
+        items={data.repos}
+        renderItem={({ name, ...rest }) => {
+          return (
+            <Link href={`repos/${name}`} passHref>
+              <a
+                className="flex w-full p-2 justify-between"
+                href={`repos/${name}`}>
+                {console.log(name)}
+                {name}
+                <ArrowIcon />
+              </a>
+            </Link>
+          );
+        }}
+        idProp="name"
+      />
+      <div className="flex justify-center items-center flex-col max-w-[140px] m-auto mt-4">
+        {loading && <Loading size="60px" />}
         <Button
           disabled={allLoaded || loading}
           onClick={() =>

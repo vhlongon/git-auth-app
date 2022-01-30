@@ -17,6 +17,7 @@ query getComments($number: Int!, $name: String!) {
     createdAt
     user {
       login
+      avatarUrl
     }
   }
 }
