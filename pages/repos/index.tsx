@@ -97,14 +97,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
     };
   }
 
-  const { data: meData } = await client.query<GetMeQuery, GetMeQueryVariables>({
-    query: meQuery,
-    context: {
-      headers: setHeadersWithAuthorization(accessToken),
-    },
-  });
-
-  await client.query<GetReposQuery, GetReposQueryVariables>({
+  const { data } = await client.query<GetReposQuery, GetReposQueryVariables>({
     query: reposQuery,
     context: {
       headers: setHeadersWithAuthorization(accessToken),
@@ -112,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   });
 
   return {
-    props: { totalRepos: meData.me?.publicRepos },
+    props: { totalRepos: data.me?.publicRepos },
   };
 };
 
