@@ -13,7 +13,6 @@ import {
 import repoQuery from '../../graphql/queries/repo.graphql';
 import { useState } from 'react';
 import Modal from '../../components/Modal';
-import Comment from '../../components/Comments';
 import Comments from '../../components/Comments';
 import List from '../../components/List';
 import EditIcon from '../../components/EditIcon';
@@ -38,9 +37,11 @@ const Repo = ({ repo }: { repo: Repo }) => {
   return (
     <div className="flex flex-col justify-center items-center px-10">
       <h1 className="text-5xl text-center mt-6">
-        <a href={repo.htmlUrl}>{name}</a>
+        <a href={repo.htmlUrl} target="_blank" rel="noreferrer">
+          {name}
+        </a>
       </h1>
-      {repo.issues && (
+      {repo.issues && repo.issues.length > 0 ? (
         <>
           <h2 className="text-gray-400 text-2xl font-semibold mt-6">Issues:</h2>
           <List
@@ -76,6 +77,10 @@ const Repo = ({ repo }: { repo: Repo }) => {
             )}
           </Modal>
         </>
+      ) : (
+        <h2 className="text-gray-400 text-2xl font-semibold mt-6">
+          No issues Issues
+        </h2>
       )}
     </div>
   );
