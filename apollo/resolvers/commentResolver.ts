@@ -100,7 +100,11 @@ export const commentResolver: IssueResolvers<Context>['comments'] = async (
     return null;
   }
 
-  const comments = await getComments(context.accessToken, parent.commentsUrl);
+  try {
+    const comments = await getComments(context.accessToken, parent.commentsUrl);
 
-  return transformComments(comments);
+    return transformComments(comments);
+  } catch (error) {
+    return null;
+  }
 };

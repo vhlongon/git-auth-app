@@ -27,13 +27,17 @@ const requestGithubUser = async (credentials: Credentials) => {
 
 export const authorizeWithGithubResolver: MutationResolvers['authorizeWithGithub'] =
   async (_parent, { code }) => {
-    const credentials = {
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-      code,
-      redirect_uri: process.env.REDIRECT_URI,
-    };
-    const { user, accessToken } = await requestGithubUser(credentials);
+    try {
+      const credentials = {
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        code,
+        redirect_uri: process.env.REDIRECT_URI,
+      };
+      const { user, accessToken } = await requestGithubUser(credentials);
 
-    return { user: camelCase(user), accessToken };
+      return { user: camelCase(user), accessToken };
+    } catch (error) {
+      return null;
+    }
   };

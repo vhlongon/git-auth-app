@@ -41,10 +41,14 @@ export const commentsResolver: QueryResolvers<Context>['comments'] = async (
     return null;
   }
 
-  const comments = await getGithubIssueComments(
-    { owner, number, name },
-    accessToken,
-  );
+  try {
+    const comments = await getGithubIssueComments(
+      { owner, number, name },
+      accessToken,
+    );
 
-  return comments ? transformComments(comments) : null;
+    return comments ? transformComments(comments) : null;
+  } catch (error) {
+    return null;
+  }
 };

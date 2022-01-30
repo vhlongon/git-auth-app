@@ -41,8 +41,13 @@ export const issueResolver: RepoResolvers<Context>['issues'] = async (
   if (!context.accessToken) {
     return null;
   }
-  const issuesUrl = `repos/${parent.owner.login}/${parent.name}/issues`;
-  const issues = await getRepoIssues(context.accessToken, issuesUrl);
 
-  return issues?.length ? issues.map(i => camelCase(i)) : [];
+  try {
+    const issuesUrl = `repos/${parent.owner.login}/${parent.name}/issues`;
+    const issues = await getRepoIssues(context.accessToken, issuesUrl);
+
+    return issues?.length ? issues.map(i => camelCase(i)) : [];
+  } catch (error) {
+    return null;
+  }
 };

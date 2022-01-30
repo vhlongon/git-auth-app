@@ -25,13 +25,17 @@ export const requestGithubToken = async (
 
 export const getGithubAccessTokenResolver: MutationResolvers['getGithubAccessToken'] =
   async (parent, { code }) => {
-    const { access_token } = await requestGithubToken({
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-      code,
-      redirect_uri: process.env.REDIRECT_URI,
-      grant_type: 'authorization_code',
-    });
+    try {
+      const { access_token } = await requestGithubToken({
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        code,
+        redirect_uri: process.env.REDIRECT_URI,
+        grant_type: 'authorization_code',
+      });
 
-    return { accessToken: access_token };
+      return { accessToken: access_token };
+    } catch (error) {
+      return null;
+    }
   };

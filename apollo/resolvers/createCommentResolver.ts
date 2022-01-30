@@ -42,13 +42,18 @@ export const createCommentResolver: MutationResolvers['createComment'] = async (
   if (!accessToken) {
     return null;
   }
-  const rest = await createComment(
-    {
-      ...args,
-      owner: context.user?.login,
-    },
-    accessToken,
-  );
 
-  return camelCase(rest);
+  try {
+    const rest = await createComment(
+      {
+        ...args,
+        owner: context.user?.login,
+      },
+      accessToken,
+    );
+
+    return camelCase(rest);
+  } catch (error) {
+    return null;
+  }
 };

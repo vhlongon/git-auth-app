@@ -41,7 +41,10 @@ export const repoResolver: QueryResolvers<Context>['repo'] = async (
     return null;
   }
 
-  const repo = await getGithubUserRepo({ owner, name }, accessToken);
-
-  return repo ? camelCase(repo) : null;
+  try {
+    const repo = await getGithubUserRepo({ owner, name }, accessToken);
+    return repo ? camelCase(repo) : null;
+  } catch (error) {
+    return null;
+  }
 };
