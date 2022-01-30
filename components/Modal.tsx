@@ -13,6 +13,7 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     maxWidth: '400px',
+    minHeight: '400px',
     width: '100%',
     backgroundColor: '#fffbeb',
     maxHeight: '80vh',

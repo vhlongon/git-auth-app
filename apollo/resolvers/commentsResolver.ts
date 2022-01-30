@@ -46,7 +46,5 @@ export const commentsResolver: QueryResolvers<Context>['comments'] = async (
     accessToken,
   );
 
-  console.log(comments)
-
   return comments ? transformComments(comments) : null;
 };

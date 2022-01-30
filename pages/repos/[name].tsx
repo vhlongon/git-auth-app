@@ -17,6 +17,7 @@ import Comment from '../../components/Comments';
 import Comments from '../../components/Comments';
 import List from '../../components/List';
 import EditIcon from '../../components/EditIcon';
+import Loading from '../../components/Loading';
 
 const Repo = ({ repo }: { repo: Repo }) => {
   const [modalOpen, setOpenModal] = useState(false);
@@ -35,13 +36,13 @@ const Repo = ({ repo }: { repo: Repo }) => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center px-10">
       <h1 className="text-5xl text-center mt-6">
         <a href={repo.htmlUrl}>{name}</a>
       </h1>
       {repo.issues && (
         <>
-          <h2>Issues:</h2> 
+          <h2 className="text-gray-400 font-semibold mt-6">Issues:</h2>
           <List
             items={repo.issues}
             idProp="id"
@@ -68,7 +69,11 @@ const Repo = ({ repo }: { repo: Repo }) => {
             )}
           />
           <Modal isOpen={modalOpen} setModalOpen={setOpenModal}>
-            {commentsData.loading && <p>Loading comments...</p>}
+            {commentsData.loading && (
+              <div className="flex justify-center mt-[140px]">
+                <Loading />
+              </div>
+            )}
             {commentsData.error && <p>Error loading comments</p>}
             {commentsData.data && (
               <Comments comments={commentsData.data.comments} />

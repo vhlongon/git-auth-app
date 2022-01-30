@@ -47,7 +47,7 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
   );
 
   return (
-    <div className="flex-col items-center justify-center bg-amber-50 p-4">
+    <div className="flex-col items-center justify-center bg-amber-50 py-4 px-10">
       <List
         items={data.repos}
         renderItem={({ name, ...rest }) => {
@@ -56,7 +56,6 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
               <a
                 className="flex w-full p-2 justify-between"
                 href={`repos/${name}`}>
-                {console.log(name)}
                 {name}
                 <ArrowIcon />
               </a>
