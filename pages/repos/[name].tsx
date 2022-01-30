@@ -17,6 +17,7 @@ import Comments from '../../components/Comments';
 import List from '../../components/List';
 import EditIcon from '../../components/EditIcon';
 import Loading from '../../components/Loading';
+import CommentInput from '../../components/CommentInput';
 
 const Repo = ({ repo }: { repo: Repo }) => {
   const [modalOpen, setOpenModal] = useState(false);
@@ -70,17 +71,32 @@ const Repo = ({ repo }: { repo: Repo }) => {
             )}
           />
           <Modal isOpen={modalOpen} setModalOpen={setOpenModal}>
-            {commentsData.loading && <Loading />}
-            {commentsData.error && <p>Error loading comments</p>}
+            {commentsData.loading && (
+              <div className="min-h-[400px] flex items-center justify-center">
+                <div className="-mt-5">
+                  <Loading />
+                </div>
+              </div>
+            )}
+            {commentsData.error && (
+              <div className="min-h-[400px] flex items-center justify-center">
+                <p>Error loading comments</p>
+              </div>
+            )}
             {commentsData.data && (
-              <Comments comments={commentsData.data.comments} />
+              <>
+                <Comments comments={commentsData.data.comments} />
+                <CommentInput />
+              </>
             )}
           </Modal>
         </>
       ) : (
-        <h2 className="text-gray-400 text-2xl font-semibold mt-6">
-          No issues Issues
-        </h2>
+        <div>
+          <h2 className="text-gray-400 text-2xl font-semibold mt-6">
+            No issues Issues
+          </h2>
+        </div>
       )}
     </div>
   );

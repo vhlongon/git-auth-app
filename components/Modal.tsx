@@ -11,17 +11,14 @@ const customStyles = {
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     maxWidth: '400px',
     minHeight: '400px',
     width: '100%',
     backgroundColor: '#fffbeb',
     maxHeight: '80vh',
-    display: 'flex',
-    flex: '1',
-    justifyContent: 'center',
-    alignItems: 'center',
+
+    padding: '20px 20px 0 20px',
   },
 };
 
@@ -45,12 +42,14 @@ const Modal = ({ isOpen, setModalOpen, children, onAfterOpen }: Props) => {
         style={customStyles}
         contentLabel="Example Modal"
         onAfterOpen={onAfterOpen}>
-        <button className="absolute top-5 right-5 text-xs" onClick={closeModal}>
+        <button
+          className="absolute top-5 right-5 text-xs z-10"
+          onClick={closeModal}>
           <span className="w-[30px] h-[30px] block text-gray-600">
             <CloseIcon />
           </span>
         </button>
-        <div className='mt-8'>{children}</div>
+        <div className="h-full mt-8 relative min-h-[400px]">{children}</div>
       </ReactModal>
     </div>
   );

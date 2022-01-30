@@ -39,9 +39,9 @@ const Comments = ({ comments }: GetCommentsQuery) => {
   const today = new Date().getDay();
 
   return (
-    <>
+    <div className="min-h-[400px] flex items-center justify-center">
       {comments && comments.length > 0 ? (
-        <ul>
+        <ul className="p-0">
           {comments.map(comment => {
             const isMe = comment.authorAssociation === 'OWNER';
             const commentDate = new Date(comment.createdAt);
@@ -54,7 +54,7 @@ const Comments = ({ comments }: GetCommentsQuery) => {
             return (
               <li
                 key={comment.id}
-                className={`flex flex-col my-4 ${
+                className={`flex flex-col first:mt-0 my-4 ${
                   isMe ? 'items-end' : 'items-start'
                 }`}>
                 <div className="text-gray-400 text-xs mt-0.5">
@@ -84,9 +84,11 @@ const Comments = ({ comments }: GetCommentsQuery) => {
           })}
         </ul>
       ) : (
-        <h2 className="text-gray-400 font-semibold">No comments yet</h2>
+        <h2 className="text-gray-400 font-semibold text-center">
+          No comments yet
+        </h2>
       )}
-    </>
+    </div>
   );
 };
 
