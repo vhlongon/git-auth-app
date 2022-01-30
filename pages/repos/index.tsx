@@ -4,11 +4,14 @@ import { client } from '../../apollo/client';
 import {
   GetMeQuery,
   GetMeQueryVariables,
+  GetReposQuery,
+  GetReposQueryVariables,
   useGetReposQuery,
 } from '../../graphql/generated/graphql-types';
 import { setHeadersWithAuthorization } from '../../utils/authUtils';
 import { getServerAuthToken } from '../../utils/cookieUtils';
 import meQuery from '../../graphql/queries/me.graphql';
+import reposQuery from '../../graphql/queries/repos.graphql';
 import Button from '../../components/Button';
 import { isValidJWT } from '../../utils/jwtUtils';
 import Link from 'next/link';
@@ -17,7 +20,7 @@ import Loading from '../../components/Loading';
 import ArrowIcon from '../../components/ArrowIcon';
 
 const Repos = ({ totalRepos }: { totalRepos: number }) => {
-  const { data, fetchMore, loading, networkStatus } = useGetReposQuery({
+  const { data, fetchMore, loading } = useGetReposQuery({
     notifyOnNetworkStatusChange: true,
     variables: {
       page: 0,
@@ -50,7 +53,7 @@ const Repos = ({ totalRepos }: { totalRepos: number }) => {
     <div className="flex-col items-center justify-center bg-amber-50 py-4 px-10">
       <List
         items={data.repos}
-        renderItem={({ name, ...rest }) => {
+        renderItem={({ name }) => {
           return (
             <Link href={`repos/${name}`} passHref>
               <a
@@ -96,6 +99,13 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   const { data: meData } = await client.query<GetMeQuery, GetMeQueryVariables>({
     query: meQuery,
+    context: {
+      headers: setHeadersWithAuthorization(accessToken),
+    },
+  });
+
+  await client.query<GetReposQuery, GetReposQueryVariables>({
+    query: reposQuery,
     context: {
       headers: setHeadersWithAuthorization(accessToken),
     },
