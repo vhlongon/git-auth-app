@@ -42,7 +42,7 @@ const Repo = ({ repo }: { repo: Repo }) => {
       </h1>
       {repo.issues && (
         <>
-          <h2 className="text-gray-400 font-semibold mt-6">Issues:</h2>
+          <h2 className="text-gray-400 text-2xl font-semibold mt-6">Issues:</h2>
           <List
             items={repo.issues}
             idProp="id"
@@ -69,11 +69,7 @@ const Repo = ({ repo }: { repo: Repo }) => {
             )}
           />
           <Modal isOpen={modalOpen} setModalOpen={setOpenModal}>
-            {commentsData.loading && (
-              <div className="flex justify-center mt-[140px]">
-                <Loading />
-              </div>
-            )}
+            {commentsData.loading && <Loading />}
             {commentsData.error && <p>Error loading comments</p>}
             {commentsData.data && (
               <Comments comments={commentsData.data.comments} />

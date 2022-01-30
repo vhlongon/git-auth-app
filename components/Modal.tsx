@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactModal from 'react-modal';
+import CloseIcon from './CloseIcon';
 
 const customStyles = {
   overlay: {
@@ -17,6 +18,10 @@ const customStyles = {
     width: '100%',
     backgroundColor: '#fffbeb',
     maxHeight: '80vh',
+    display: 'flex',
+    flex: '1',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 
@@ -40,12 +45,12 @@ const Modal = ({ isOpen, setModalOpen, children, onAfterOpen }: Props) => {
         style={customStyles}
         contentLabel="Example Modal"
         onAfterOpen={onAfterOpen}>
-        <button
-          className="bg-slate-600 hover:bg-slate-700 text-white text-small absolute px-2 border rounded-lg right-5"
-          onClick={closeModal}>
-          close
+        <button className="absolute top-5 right-5 text-xs" onClick={closeModal}>
+          <span className="w-[30px] h-[30px] block text-gray-600">
+            <CloseIcon />
+          </span>
         </button>
-        <div className="mt-12">{children}</div>
+        <div className='mt-8'>{children}</div>
       </ReactModal>
     </div>
   );

@@ -37,49 +37,56 @@ const Reactions = (props: ReactionsProps) => {
 
 const Comments = ({ comments }: GetCommentsQuery) => {
   const today = new Date().getDay();
+
   return (
-    <ul>
-      {comments?.map(comment => {
-        const isMe = comment.authorAssociation === 'OWNER';
-        const commentDate = new Date(comment.createdAt);
-        const isToday = commentDate.getDay() === today;
+    <>
+      {comments && comments.length > 0 ? (
+        <ul>
+          {comments.map(comment => {
+            const isMe = comment.authorAssociation === 'OWNER';
+            const commentDate = new Date(comment.createdAt);
+            const isToday = commentDate.getDay() === today;
 
-        const styles = isMe
-          ? 'text-gray-400 bg-gray-200 border-gray-200'
-          : 'text-gray-500 bg-none border-gray-400';
+            const styles = isMe
+              ? 'text-gray-400 bg-gray-200 border-gray-200'
+              : 'text-gray-500 bg-none border-gray-400';
 
-        return (
-          <li
-            key={comment.id}
-            className={`flex flex-col my-4 ${
-              isMe ? 'items-end' : 'items-start'
-            }`}>
-            <div className="text-gray-400 text-xs mt-0.5">
-              <span className="mr-1">
-                {!isToday ? commentDate.toLocaleDateString() : 'Today'}
-              </span>
-              {commentDate.toLocaleTimeString()}
-            </div>
-            <div className="flex items-center">
-              <span className="w-[30px] h-[30px]">
-                <Image
-                  alt={comment.user.login}
-                  className="rounded-full"
-                  src={comment.user.avatarUrl || '/user-placeholder.png'}
-                  width={30}
-                  height={30}
-                />
-              </span>
-              <span
-                className={`rounded-lg flex-1 border-2 ml-2 mb-1 px-2 py-1 ${styles}`}>
-                {comment.body}
-              </span>
-            </div>
-            {comment.reactions && <Reactions {...comment.reactions} />}
-          </li>
-        );
-      })}
-    </ul>
+            return (
+              <li
+                key={comment.id}
+                className={`flex flex-col my-4 ${
+                  isMe ? 'items-end' : 'items-start'
+                }`}>
+                <div className="text-gray-400 text-xs mt-0.5">
+                  <span className="mr-1">
+                    {!isToday ? commentDate.toLocaleDateString() : 'Today'}
+                  </span>
+                  {commentDate.toLocaleTimeString()}
+                </div>
+                <div className="flex items-center">
+                  <span className="w-[30px] h-[30px]">
+                    <Image
+                      alt={comment.user.login}
+                      className="rounded-full"
+                      src={comment.user.avatarUrl || '/user-placeholder.png'}
+                      width={30}
+                      height={30}
+                    />
+                  </span>
+                  <span
+                    className={`rounded-lg flex-1 border-2 ml-2 mb-1 px-2 py-1 ${styles}`}>
+                    {comment.body}
+                  </span>
+                </div>
+                {comment.reactions && <Reactions {...comment.reactions} />}
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <h2 className="text-gray-400 font-semibold">No comments yet</h2>
+      )}
+    </>
   );
 };
 
