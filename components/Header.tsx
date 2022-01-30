@@ -4,8 +4,11 @@ import React from 'react';
 import { useAuth } from '../providers/AuthProvider';
 import Button from './Button';
 
-const Header = () => {
-  const { isLoggedIn, user, logOut } = useAuth();
+interface Props {
+  isLoggedIn: boolean;
+}
+const Header = ({ isLoggedIn }: Props) => {
+  const { user, logOut } = useAuth();
   const router = useRouter();
   const isStart = router.pathname === '/';
   const isProfile = router.pathname === '/profile';

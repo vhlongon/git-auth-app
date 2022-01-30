@@ -10,7 +10,7 @@ import { User } from '../graphql/generated/graphql-types';
 import { parseCookie } from '../utils/cookieUtils';
 import { decodeJWT, isValidJWT } from '../utils/jwtUtils';
 
-type AuthSessionUser = Pick<
+export type AuthSessionUser = Pick<
   User,
   'accessToken' | 'avatarUrl' | 'id' | 'login' | 'name'
 >;
@@ -25,12 +25,12 @@ export const AuthContext = createContext<AuthContextProps>({
   logOut: () => {},
 });
 
-interface AuthProviderProps {
+interface AuthProviderProps extends AuthContextProps {
   children: ReactNode;
-  initialCookie: string;
+  logOut: () => void;
 }
 
-const getAuthState = (
+export const getAuthState = (
   cookie?: string,
 ): { isLoggedIn: boolean; user: AuthSessionUser | undefined } => {
   const { jwt } = parseCookie(cookie) ?? {};
@@ -44,28 +44,10 @@ const getAuthState = (
 
 export const AuthProvider = ({
   children,
-  initialCookie,
+  isLoggedIn,
+  user,
+  logOut,
 }: AuthProviderProps) => {
-  const authSession = getAuthState(initialCookie);
-  const [isLoggedIn, setIsLoggedIn] = useState(authSession.isLoggedIn);
-  const [user, setUser] = useState<AuthSessionUser | undefined>(
-    authSession.user,
-  );
-  const router = useRouter();
-
-  const logOut = useCallback(() => {
-    setIsLoggedIn(false);
-    setUser(undefined);
-    fetch('/api/logout', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    });
-    router.push('/');
-  }, [router]);
-
   return (
     <AuthContext.Provider value={{ isLoggedIn, user, logOut }}>
       {children}
