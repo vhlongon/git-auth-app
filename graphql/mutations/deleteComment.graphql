@@ -1,0 +1,3 @@
+mutation deleteComment($id: Int!, $repoName: String!) {
+  deleteComment(id: $id, repoName: $repoName)
+}

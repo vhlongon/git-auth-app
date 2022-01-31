@@ -110,7 +110,8 @@ type Query {
 }
 
 type Mutation {
-  authorizeWithGithub(code: String!): AuthPayloadWithUser!
-  getGithubAccessToken(code: String!): AuthPayload!
+  authorizeWithGithub(code: String!): AuthPayloadWithUser
+  getGithubAccessToken(code: String!): AuthPayload
   createComment(body: String!, issueNumber: Int!, repoName: String!): Comment
+  deleteComment(id: Int!, repoName: String!): Boolean
 }

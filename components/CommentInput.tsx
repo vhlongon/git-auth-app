@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCreateCommentMutation } from '../graphql/generated/graphql-types';
+import CommentLoading from './CommentLoading';
 import SendIcon from './SendIcon';
 
 interface Props {
@@ -11,9 +12,10 @@ const CommentInput = ({ issueNumber, repoName, onCommentCreated }: Props) => {
   const [value, setValue] = useState('');
   const [createComment, { loading }] = useCreateCommentMutation({
     refetchQueries: ['getComments'],
+    fetchPolicy: 'network-only',
     onCompleted: () => {
       setValue('');
-      setTimeout(onCommentCreated, 1000);
+      setTimeout(onCommentCreated, 500);
     },
   });
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -45,6 +47,8 @@ const CommentInput = ({ issueNumber, repoName, onCommentCreated }: Props) => {
     }
   };
 
+  console.log(loading);
+
   return (
     <div className="bg-amber-50 sticky w-full bottom-0 left-0 py-2">
       <div className="flex items-center relative">
@@ -58,7 +62,11 @@ const CommentInput = ({ issueNumber, repoName, onCommentCreated }: Props) => {
         <button
           onClick={handleOnClick}
           className="outline-none active:outline-none focus:outline-none w-6 h-6 text-blue-500 -ml-10 z-10">
-          <SendIcon disabled={!value} />
+          {loading ? (
+            <CommentLoading />
+          ) : (
+            <SendIcon disabled={!value || loading} />
+          )}
         </button>
       </div>
     </div>

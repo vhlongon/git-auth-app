@@ -21,7 +21,14 @@ import CommentInput from '../../components/CommentInput';
 
 const Repo = ({ repo }: { repo: Repo }) => {
   const [modalOpen, setOpenModal] = useState(false);
-  const [getComments, commentsData] = useGetCommentsLazyQuery();
+  const [getComments, commentsData] = useGetCommentsLazyQuery({
+    pollInterval: 1000,
+    nextFetchPolicy: 'no-cache',
+    onCompleted: () => {
+      scrollToBottom();
+    },
+  });
+
   const [currentIssue, setCurrentIssue] = useState<number | null>(null);
   const bottomElement = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -96,7 +103,10 @@ const Repo = ({ repo }: { repo: Repo }) => {
             )}
             {commentsData.data && currentIssue && (
               <>
-                <Comments comments={commentsData.data.comments} />
+                <Comments
+                  comments={commentsData.data.comments}
+                  repoName={repo.name}
+                />
                 <CommentInput
                   repoName={repo.name}
                   issueNumber={currentIssue}

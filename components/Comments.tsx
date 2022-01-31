@@ -3,7 +3,10 @@ import React, { ReactNode } from 'react';
 import {
   GetCommentsQuery,
   Reactions,
+  useDeleteCommentMutation,
 } from '../graphql/generated/graphql-types';
+import DeleteIcon from './DeleteIcon';
+import DeleteLoading from './DeleteLoading';
 
 type ReactionsProps = Omit<Reactions, 'totalCount' | 'url'>;
 
@@ -35,8 +38,32 @@ const Reactions = (props: ReactionsProps) => {
   );
 };
 
-const Comments = ({ comments }: GetCommentsQuery) => {
+interface Props extends GetCommentsQuery {
+  repoName: string;
+}
+const Comments = ({ comments, repoName }: Props) => {
   const today = new Date().getDay();
+  const [deleteComment, { loading }] = useDeleteCommentMutation({
+    refetchQueries: ['getComments'],
+    fetchPolicy: 'network-only',
+  });
+  const [deleting, setDeleting] = React.useState<number | null>(null);
+
+  const handleDelete = (id: number) => () => {
+    setDeleting(id);
+    deleteComment({
+      variables: {
+        id,
+        repoName,
+      },
+      onCompleted: () => {
+        setDeleting(null);
+      },
+      onError: () => {
+        setDeleting(null);
+      },
+    });
+  };
 
   return (
     <div className="min-h-[400px] flex items-center justify-center">
@@ -54,17 +81,29 @@ const Comments = ({ comments }: GetCommentsQuery) => {
             return (
               <li
                 key={comment.id}
-                className={`flex flex-col first:mt-0 my-4 ${
+                className={`flex flex-col first:mt-2 my-4 ${
                   isMe ? 'items-end' : 'items-start'
                 }`}>
-                <div className="text-gray-400 text-xs mt-0.5">
+                <div
+                  className={`flex items-center text-gray-400 text-xs mt-0.5 ${
+                    isMe ? 'justify-end' : 'justify-start'
+                  }`}>
                   <span className="mr-1">
                     {!isToday ? commentDate.toLocaleDateString() : 'Today'}
                   </span>
                   {commentDate.toLocaleTimeString()}
+                  <button
+                    onClick={handleDelete(comment.id)}
+                    className="ml-2 mb-0.5 outline-none active:outline-none focus:outline-none w-4 h-4 text-gray-400 hover:text-gray-600 z-10">
+                    {deleting === comment.id ? (
+                      <DeleteLoading />
+                    ) : (
+                      <DeleteIcon />
+                    )}
+                  </button>
                 </div>
                 <div className="flex items-center">
-                  <span className="w-[30px] h-[30px]">
+                  <span className="grow-1 shrink-0 basis-[30px]">
                     <Image
                       alt={comment.user.login}
                       className="rounded-full"
@@ -74,7 +113,7 @@ const Comments = ({ comments }: GetCommentsQuery) => {
                     />
                   </span>
                   <span
-                    className={`rounded-lg flex-1 border-2 ml-2 mb-1 px-2 py-1 ${styles}`}>
+                    className={`rounded-lg grow-1 shrink-1 border-2 ml-2 mb-1 px-2 py-1 ${styles}`}>
                     {comment.body}
                   </span>
                 </div>
