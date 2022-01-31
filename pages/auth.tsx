@@ -61,9 +61,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
     });
 
     if (data) {
-      const { user, accessToken } = data.authorizeWithGithub;
+      const { user, accessToken } = data.authorizeWithGithub ?? {};
       const userWithAccessToken = { ...user, accessToken };
-      const jwtToken = encodeJWT(userWithAccessToken, accessToken);
+      const jwtToken =
+        accessToken && encodeJWT(userWithAccessToken, accessToken);
 
       setServerCookie(
         context.res,
