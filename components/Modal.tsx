@@ -12,6 +12,7 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     transform: 'translate(-50%, -50%)',
+    transition: 'all .3s',
     maxWidth: '400px',
     minHeight: '400px',
     width: '100%',

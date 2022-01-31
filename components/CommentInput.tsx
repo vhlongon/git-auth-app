@@ -47,8 +47,6 @@ const CommentInput = ({ issueNumber, repoName, onCommentCreated }: Props) => {
     }
   };
 
-  console.log(loading);
-
   return (
     <div className="bg-amber-50 sticky w-full bottom-0 left-0 py-2">
       <div className="flex items-center relative">

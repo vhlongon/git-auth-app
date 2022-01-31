@@ -65,10 +65,14 @@ const Comments = ({ comments, repoName }: Props) => {
     });
   };
 
+  const hasComments = comments && comments.length > 0;
   return (
-    <div className="min-h-[400px] flex items-center justify-center">
-      {comments && comments.length > 0 ? (
-        <ul className="p-0">
+    <div
+      className={`min-h-[400px] flex justify-center ${
+        hasComments ? 'items-start' : 'items-center'
+      }`}>
+      {hasComments ? (
+        <ul className="p-0 w-full">
           {comments.map(comment => {
             const isMe = comment.authorAssociation === 'OWNER';
             const commentDate = new Date(comment.createdAt);
